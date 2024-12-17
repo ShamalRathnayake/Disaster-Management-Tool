@@ -1,20 +1,23 @@
 package data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CustomLinkedList<T> {
     private Node<T> head;
 
-    public CustomLinkedList(){
+    public CustomLinkedList() {
         this.head = null;
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return this.head == null;
     }
 
-    public void insertFront(T value){
+    public void insertFront(T value) {
         Node<T> newNode = new Node<T>(value);
 
-        if(this.isEmpty()){
+        if (this.isEmpty()) {
             this.head = newNode;
             return;
         }
@@ -24,53 +27,55 @@ public class CustomLinkedList<T> {
         this.head = newNode;
     }
 
-    public void insertAfter(T value, T nodeValue){
+    public void insertAfter(T value, T nodeValue) {
         Node<T> newNode = new Node<T>(value);
 
-        if(this.isEmpty()){
+        if (this.isEmpty()) {
             throw new IllegalStateException("Linked list is empty");
         }
 
-        if(this.head.data == nodeValue){
+        if (this.head.data.equals(nodeValue)) {
             newNode.next = this.head.next;
-            this.head.next.prev = newNode;
+            if (this.head.next != null) {
+                this.head.next.prev = newNode;
+            }
             newNode.prev = this.head;
             this.head.next = newNode;
             return;
         }
 
         Node<T> current = this.head;
-        while(current.next != null && current.data != nodeValue){
+        while (current.next != null && !current.data.equals(nodeValue)) {
             current = current.next;
         }
 
-        if(current.next == null){
+        if (current.next == null) {
             throw new IllegalStateException("Value not found in Linked List");
         }
 
         newNode.next = current.next;
-        current.next.prev = newNode;
+        if (current.next != null) {
+            current.next.prev = newNode;
+        }
         newNode.prev = current;
         current.next = newNode;
-
     }
 
-    public void insertEnd(T value){
+    public void insertEnd(T value) {
         Node<T> newNode = new Node<T>(value);
 
-        if(this.isEmpty()){
+        if (this.isEmpty()) {
             this.head = newNode;
             return;
         }
 
         Node<T> current = this.head;
-        while(current.next != null){
+        while (current.next != null) {
             current = current.next;
         }
 
         newNode.prev = current;
         current.next = newNode;
-
     }
 
     public Node<T> deleteFront() {
@@ -89,88 +94,106 @@ public class CustomLinkedList<T> {
         return temp;
     }
 
-
-    public Node<T> deleteNode(T nodeValue){
-        if(this.isEmpty()){
+    public Node<T> deleteNode(T nodeValue) {
+        if (this.isEmpty()) {
             throw new IllegalStateException("Linked list is empty");
         }
 
         Node<T> current = this.head;
-        while(current.next != null && current.data != nodeValue){
+        while (current.next != null && !current.data.equals(nodeValue)) {
             current = current.next;
         }
 
-        if(current.next == null){
-            throw new IllegalStateException("Value not found in Linked List");
+        if (current.next == null && !current.data.equals(nodeValue)) {
+            return null;
         }
 
         Node<T> temp = current;
 
-        current.prev.next = current.next;
-        current.next.prev = current.prev;
+        if (current.prev != null) {
+            current.prev.next = current.next;
+        }
+        if (current.next != null) {
+            current.next.prev = current.prev;
+        }
 
         return temp;
-
     }
 
-    public Node<T> deleteEnd(){
-        if(this.isEmpty()){
+    public Node<T> deleteEnd() {
+        if (this.isEmpty()) {
             throw new IllegalStateException("Linked list is empty");
         }
 
         Node<T> current = this.head;
-        while(current.next != null){
+        while (current.next != null) {
             current = current.next;
         }
 
         Node<T> temp = current;
 
-        current.prev.next = null;
+        if (current.prev != null) {
+            current.prev.next = null;
+        }
 
         return temp;
     }
 
-    public Node<T> getFirst(){
+    public Node<T> getFirst() {
         return this.head;
     }
 
-    public Node<T> getNode(T nodeValue){
-        if(this.isEmpty()){
+    public Node<T> getNode(T nodeValue) {
+        if (this.isEmpty()) {
             return null;
         }
 
         Node<T> current = this.head;
-        while(current.next != null && current.data != nodeValue){
+        while (current.next != null && !current.data.equals(nodeValue)) {
+            current = current.next;
+        }
+
+        if (!current.data.equals(nodeValue)) {
+            return null;
+        }
+
+        return current;
+    }
+
+    public Node<T> getLast() {
+        if (this.isEmpty()) {
+            return null;
+        }
+
+        Node<T> current = this.head;
+        while (current.next != null) {
             current = current.next;
         }
 
         return current;
     }
 
-    public Node<T> getLast(){
-        if(this.isEmpty()){
-            return null;
-        }
-
-        Node<T> current = this.head;
-        while(current.next != null){
-            current = current.next;
-        }
-
-        return current;
-    }
-
-    public void printAll(){
-        if(this.isEmpty()){
+    public void printAll() {
+        if (this.isEmpty()) {
             throw new IllegalStateException("Linked list is empty");
         }
 
         Node<T> current = this.head;
-        while(current.next != null){
-            System.out.println(current.data.toString());
+        while (current != null) {
+            System.out.println(current.data);
+            current = current.next;
+        }
+    }
+
+    public List<T> toList() {
+        List<T> list = new ArrayList<>();
+        Node<T> current = this.head;
+
+        while (current != null) {
+            list.add(current.data);
             current = current.next;
         }
 
+        return list;
     }
-
 }
