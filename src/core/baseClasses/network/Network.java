@@ -56,8 +56,15 @@ public class Network {
         }
     }
 
-    public void removeConnection(String fromLocationId, String toLocationId) {
+    public void removeConnection(Connection connection) {
+        Location fromLocation = connection.getStartLocation();
+        Location toLocation = connection.getEndLocation();
 
+        if (fromLocation != null && toLocation != null) {
+
+            fromLocation.removeConnection(connection);
+            toLocation.removeConnection(connection);
+        }
     }
 
     public Collection<Location> getLocations() {

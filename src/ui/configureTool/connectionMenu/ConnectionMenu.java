@@ -1,8 +1,10 @@
 package ui.configureTool.connectionMenu;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Scanner;
 
+import core.baseClasses.connection.Connection;
 import core.baseClasses.location.Location;
 import core.baseClasses.network.Network;
 import ui.Menu;
@@ -100,6 +102,23 @@ public class ConnectionMenu {
         }
 
         Location startLocation = (Location) locations.toArray()[startLocationIndex - 1];
+
+        startLocation.printConnections();
+
+        List<Connection> connections = startLocation.getConnections().toList();
+
+        int connectionIndex = Menu.getIntInput("Enter the index of the connection: ");
+        if (connectionIndex < 1 || connectionIndex > connections.size()) {
+            System.out.println("Invalid index for connection. Please try again.");
+            return;
+        }
+
+        Connection connection = (Connection) connections.toArray()[connectionIndex - 1];
+
+        network.removeConnection(connection);
+
+        System.out.println("Connection between " + startLocation.getName() + " and "
+                + connection.getEndLocation().getName() + " successfully deleted.");
 
     }
 

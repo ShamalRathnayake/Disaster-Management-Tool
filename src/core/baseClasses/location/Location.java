@@ -9,6 +9,7 @@ import core.enums.Enum.LocationType;
 import core.enums.Enum.ResourceType;
 import core.enums.Enum.StatusType;
 import data.CustomLinkedList;
+import data.Node;
 
 public class Location {
 
@@ -130,7 +131,10 @@ public class Location {
     }
 
     public void removeConnection(Connection connection) {
-        if (connections.deleteNode(connection) != null) {
+
+        Node<Connection> deletedConnection = connections.deleteNode(connection);
+
+        if (deletedConnection != null) {
             // logs.add("Connection removed between " + name + " and " +
             // connection.getDestination().getName());
         }
