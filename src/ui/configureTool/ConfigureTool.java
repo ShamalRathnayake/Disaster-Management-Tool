@@ -5,6 +5,7 @@ import java.util.Scanner;
 import core.baseClasses.network.Network;
 import ui.configureTool.connectionMenu.ConnectionMenu;
 import ui.configureTool.locationMenu.LocationMenu;
+import ui.configureTool.resourceMenu.ResourceMenu;
 
 public class ConfigureTool {
 
@@ -31,44 +32,11 @@ public class ConfigureTool {
                     ConnectionMenu.connectionSubmenu();
                     break;
                 case 3:
-                    resourceSubmenu();
+                    ResourceMenu.resourceSubmenu();
                     break;
                 case 4:
                     disasterSubmenu();
                     break;
-                case 5:
-                    return;
-                default:
-                    System.out.println("Invalid choice! Please enter a valid option.");
-            }
-        }
-    }
-
-    private static void resourceSubmenu() {
-        while (true) {
-            System.out.println("\n--- Resource ---");
-            System.out.println("1. Add Resource");
-            System.out.println("2. Remove Resource");
-            System.out.println("3. Edit Resource");
-            System.out.println("4. View Resources");
-            System.out.println("5. Go Back");
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (choice) {
-                // case 1:
-                // addResource();
-                // break;
-                // case 2:
-                // removeResource();
-                // break;
-                // case 3:
-                // editResource();
-                // break;
-                // case 4:
-                // viewResources();
-                // break;
                 case 5:
                     return;
                 default:
@@ -109,22 +77,6 @@ public class ConfigureTool {
             }
         }
     }
-
-    // private static void addResource() {
-    // System.out.println("Resource added.");
-    // }
-
-    // private static void removeResource() {
-    // System.out.println("Resource removed.");
-    // }
-
-    // private static void editResource() {
-    // System.out.println("Resource edited.");
-    // }
-
-    // private static void viewResources() {
-    // System.out.println("Viewing resources...");
-    // }
 
     // private static void addDisaster() {
     // System.out.println("Disaster added.");

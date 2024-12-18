@@ -5,6 +5,7 @@ import java.util.*;
 import core.baseClasses.connection.Connection;
 import core.baseClasses.disaster.Disaster;
 import core.baseClasses.log.LogEntry;
+import core.baseClasses.resource.Resource;
 import core.enums.Enum.LocationType;
 import core.enums.Enum.ResourceType;
 import core.enums.Enum.StatusType;
@@ -22,7 +23,9 @@ public class Location {
     private double latitude;
     private double longitude;
 
-    private HashMap<ResourceType, Integer> resources;
+    private HashMap<ResourceType, Integer> resourcesCount;
+
+    private CustomLinkedList<Resource> resources;
 
     private CustomLinkedList<Disaster> disasters;
 
@@ -39,7 +42,8 @@ public class Location {
         this.type = type;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.resources = new HashMap<>();
+        this.resourcesCount = new HashMap<>();
+        this.resources = new CustomLinkedList<>();
         this.disasters = new CustomLinkedList<>();
         this.connections = new CustomLinkedList<>();
         this.status = StatusType.ACTIVE;
@@ -82,11 +86,19 @@ public class Location {
         this.longitude = longitude;
     }
 
-    public HashMap<ResourceType, Integer> getResources() {
+    public HashMap<ResourceType, Integer> getResourcesCount() {
+        return resourcesCount;
+    }
+
+    // public void setResources(HashMap<ResourceType, Integer> resources) {
+    // this.resources = resources;
+    // }
+
+    public CustomLinkedList<Resource> getResources() {
         return resources;
     }
 
-    public void setResources(HashMap<ResourceType, Integer> resources) {
+    public void setResources(CustomLinkedList<Resource> resources) {
         this.resources = resources;
     }
 
@@ -164,80 +176,54 @@ public class Location {
     }
 
     // // Resource Management Methods
-    // public void addResource(ResourceType resource, int quantity) {
-    // int currentQuantity = resources.getOrDefault(resource, 0);
-    // int maxCapacity = capacity.getOrDefault(resource, Integer.MAX_VALUE);
+    public void addResource(Resource resource) {
+        resources.insertEnd(resource);
+        int count = resourcesCount.get(resource.getResourceType());
+        resourcesCount.put(resource.getResourceType(), count + resource.getTotalQuantity());
+    }
 
-    // if (currentQuantity + quantity <= maxCapacity) {
-    // resources.put(resource, currentQuantity + quantity);
-    // // logs.add("Added " + quantity + " of " + type + " to " + name);
-    // } else {
-    // // logs.add("Attempted to exceed capacity for " + type + " at " + name);
-    // }
-    // }
+    public void printResources() {
+        System.out.println("\nResources:");
 
-    // public void removeResource(ResourceType type, int quantity) {
-    // int currentQuantity = resources.getOrDefault(type, 0);
+        System.out.printf("%-5s %-20s %-20s %-15s %-15s %-15s %-20s\n",
+                "Index", "Resource ID", "Resource Type", "Total Quantity",
+                "Allocated Qty", "Available Qty", "Stationed At");
 
-    // if (currentQuantity >= quantity) {
-    // resources.put(type, currentQuantity - quantity);
-    // logs.add("Removed " + quantity + " of " + type + " from " + name);
-    // } else {
-    // logs.add("Not enough " + type + " at " + name);
-    // }
-    // }
+        int index = 1;
 
-    // public Map<ResourceType, Integer> getAvailableResources() {
-    // return new HashMap<>(resources); // return a copy to preserve integrity
-    // }
+        for (Resource resource : this.resources.toList()) {
+            System.out.printf("%-5d %-20s %-20s %-15d %-15d %-15d %-20s\n",
+                    index++,
+                    resource.getResourceId(),
+                    resource.getResourceType().name(),
+                    resource.getTotalQuantity(),
+                    resource.getAllocatedQuantity(),
+                    resource.getTotalQuantity() - resource.getAllocatedQuantity(),
+                    resource.getStationedAt().getName());
+        }
 
-    // // Disaster Management Methods
-    // public void addDisaster(Disaster disaster) {
-    // if (!disasters.contains(disaster)) {
-    // disasters.add(disaster);
-    // logs.add("Disaster reported at " + name + ": " + disaster.getType());
-    // }
-    // }
+        System.out.println("");
+    }
 
-    // public void removeDisaster(Disaster disaster) {
-    // if (disasters.remove(disaster)) {
-    // logs.add("Disaster resolved at " + name + ": " + disaster.getType());
-    // }
-    // }
+    public void removeResource(Resource resource) {
+        if (resource == null) {
+            System.out.println("Invalid resource. Cannot remove.");
+            return;
+        }
 
-    // public List<Disaster> getActiveDisasters() {
-    // return new ArrayList<>(disasters); // return a copy to preserve integrity
-    // }
+        Node<Resource> resourceNode = resources.getNode(resource);
 
-    // // Status Management Methods
-    // public void markAsActive() {
-    // this.status = LocationStatus.ACTIVE;
-    // logs.add(name + " marked as ACTIVE.");
-    // }
+        if (resourceNode == null) {
+            System.out.println("Resource not found in the location.");
+            return;
+        }
 
-    // public void markAsDamaged() {
-    // this.status = LocationStatus.DAMAGED;
-    // logs.add(name + " marked as DAMAGED.");
-    // }
+        int currentCount = resourcesCount.get(resource.getResourceType());
+        resourcesCount.put(resource.getResourceType(), currentCount - resource.getTotalQuantity());
 
-    // public boolean isOperable() {
-    // return status == LocationStatus.ACTIVE;
-    // }
+        resources.deleteNode(resource);
 
-    // // Logging Methods
-    // public void addLog(String logEntry) {
-    // logs.add(logEntry);
-    // }
+        System.out.println("Resource removed successfully: " + resource.getResourceId());
+    }
 
-    // public List<String> getLogs() {
-    // return new ArrayList<>(logs); // return a copy to preserve integrity
-    // }
-
-    // // Utility Methods
-    // public double calculateDistance(Location other) {
-    // // Simple Euclidean distance or use Haversine formula for more precision in
-    // // real-world scenarios
-    // return Math.sqrt(Math.pow(this.latitude - other.latitude, 2) +
-    // Math.pow(this.longitude - other.longitude, 2));
-    // }
 }

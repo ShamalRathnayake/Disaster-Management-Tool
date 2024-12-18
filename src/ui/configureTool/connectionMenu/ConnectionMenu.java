@@ -1,5 +1,6 @@
 package ui.configureTool.connectionMenu;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
@@ -19,9 +20,8 @@ public class ConnectionMenu {
             System.out.println("\n--- Connection ---");
             System.out.println("1. Add Connection");
             System.out.println("2. Remove Connection");
-            System.out.println("3. Edit Connection");
-            System.out.println("4. View Connections");
-            System.out.println("5. Go Back");
+            System.out.println("3. View Connections");
+            System.out.println("4. Go Back");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -33,13 +33,10 @@ public class ConnectionMenu {
                 case 2:
                     removeConnection();
                     break;
-                // case 3:
-                // editConnection();
-                // break;
-                // case 4:
-                // viewConnections();
-                // break;
-                case 5:
+                case 3:
+                    viewConnections();
+                    break;
+                case 4:
                     return;
                 default:
                     System.out.println("Invalid choice! Please enter a valid option.");
@@ -122,11 +119,46 @@ public class ConnectionMenu {
 
     }
 
-    // private static void editConnection() {
-    // System.out.println("Connection edited.");
-    // }
+    private static void viewConnections() {
+        System.out.println("Viewing connections...");
 
-    // private static void viewConnections() {
-    // System.out.println("Viewing connections...");
-    // }
+        Collection<Location> locations = network.getLocations();
+        if (locations.size() == 0) {
+            System.out.println("No locations found. Add locations first.");
+            return;
+        }
+
+        System.out.printf("%-40s %-20s %-20s %-10s %-10s %-25s\n",
+                "Connection ID", "Start Location", "End Location",
+                "Distance", "Status", "Last Updated");
+
+        List<String> connectionRecords = new ArrayList<String>();
+
+        for (Location location : locations) {
+
+            List<Connection> connections = location.getConnections().toList();
+
+            if (!connections.isEmpty()) {
+
+                for (Connection connection : connections) {
+                    String rec = String.format("%-40s %-20s %-20s %-10.2f %-10s %-25s\n",
+                            connection.getConnectionId(),
+                            connection.getStartLocation().getName(),
+                            connection.getEndLocation().getName(),
+                            connection.getDistance(),
+                            connection.getStatus(),
+                            connection.getLastUpdated().toString());
+
+                    connectionRecords.add(rec);
+                }
+            }
+
+            for (String rec : connectionRecords) {
+                System.out.println(rec);
+            }
+
+            System.out.println();
+        }
+
+    }
 }

@@ -2,6 +2,7 @@ package core.baseClasses.resource;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import core.baseClasses.location.Location;
 import core.enums.Enum.ResourceType;
@@ -20,8 +21,8 @@ public class Resource {
 
     private Map<String, Integer> disasterAllocations;
 
-    public Resource(String resourceId, ResourceType resourceType, int totalQuantity, Location stationedAt) {
-        this.resourceId = resourceId;
+    public Resource(ResourceType resourceType, int totalQuantity, Location stationedAt) {
+        this.resourceId = UUID.randomUUID().toString();
         this.resourceType = resourceType;
         this.totalQuantity = totalQuantity;
         this.allocatedQuantity = 0;
@@ -77,70 +78,4 @@ public class Resource {
         this.disasterAllocations = disasterAllocations;
     }
 
-    // // Method to allocate a certain number of this resource to a disaster
-    // public boolean allocateToDisaster(String disasterId, int quantity) {
-    // if (quantity <= (totalQuantity - allocatedQuantity)) {
-    // // Allocate resources
-    // allocatedQuantity += quantity;
-    // disasterAllocations.put(disasterId,
-    // disasterAllocations.getOrDefault(disasterId, 0) + quantity);
-    // return true;
-    // } else {
-    // System.out.println("Not enough resources available for allocation.");
-    // return false;
-    // }
-    // }
-
-    // // Method to reallocate a certain number of resources from one disaster to
-    // // another
-    // public boolean reallocateToDisaster(String disasterIdFrom, String
-    // disasterIdTo, int quantity) {
-    // // Check if the resource is already allocated to the source disaster
-    // if (disasterAllocations.containsKey(disasterIdFrom) &&
-    // disasterAllocations.get(disasterIdFrom) >= quantity) {
-    // // Deallocate from the original disaster
-    // disasterAllocations.put(disasterIdFrom,
-    // disasterAllocations.get(disasterIdFrom) - quantity);
-
-    // // Allocate to the new disaster
-    // return allocateToDisaster(disasterIdTo, quantity);
-    // } else {
-    // System.out.println("Not enough resources allocated to the source disaster for
-    // reallocation.");
-    // return false;
-    // }
-    // }
-
-    // // Method to release a certain number of resources from a disaster
-    // (unallocate
-    // // them)
-    // public boolean releaseFromDisaster(String disasterId, int quantity) {
-    // if (disasterAllocations.containsKey(disasterId) &&
-    // disasterAllocations.get(disasterId) >= quantity) {
-    // // Release resources
-    // disasterAllocations.put(disasterId, disasterAllocations.get(disasterId) -
-    // quantity);
-    // allocatedQuantity -= quantity;
-    // return true;
-    // } else {
-    // System.out.println("Invalid request: Insufficient resources allocated to the
-    // disaster.");
-    // return false;
-    // }
-    // }
-
-    // // Method to check how many resources are available for allocation
-    // public int availableForAllocation() {
-    // return totalQuantity - allocatedQuantity;
-    // }
-
-    // // Method to get a summary of the resource details
-    // public String getResourceSummary() {
-    // return String.format(
-    // "Resource ID: %s\nType: %s\nTotal Quantity: %d\nAllocated Quantity:
-    // %d\nStationed At: %s\nDisaster Allocations: %s",
-    // resourceId, resourceType, totalQuantity, allocatedQuantity,
-    // stationedAt.getName(),
-    // disasterAllocations.toString());
-    // }
 }

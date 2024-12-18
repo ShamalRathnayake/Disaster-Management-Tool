@@ -1,5 +1,9 @@
 package data;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import core.baseClasses.log.LogEntry;
 import core.enums.Enum.LogLevel;
 
@@ -25,7 +29,7 @@ public class Log {
     // Method to generate a full report of all logs
     public String generateReport() {
         StringBuilder report = new StringBuilder();
-        for (LogEntry entry : logEntries) {
+        for (LogEntry entry : logEntries.toList()) {
             report.append(entry.toString()).append("\n");
         }
         return report.toString();
@@ -34,18 +38,20 @@ public class Log {
     // Method to generate a summary of logs by log level
     public String generateLogSummary() {
         Map<LogLevel, Integer> logSummary = new HashMap<>();
-        for (LogEntry entry : logEntries) {
-            logSummary.put(entry.getLevel(), logSummary.getOrDefault(entry.getLevel(), 0) + 1);
+        for (LogEntry entry : logEntries.toList()) {
+            logSummary.put(entry.getLevel(), logSummary.getOrDefault(entry.getLevel(), 0)
+                    + 1);
         }
         StringBuilder summary = new StringBuilder();
         for (LogLevel level : LogLevel.values()) {
-            summary.append(level).append(": ").append(logSummary.getOrDefault(level, 0)).append("\n");
+            summary.append(level).append(": ").append(logSummary.getOrDefault(level,
+                    0)).append("\n");
         }
         return summary.toString();
     }
 
     // Method to get the list of all log entries
     public List<LogEntry> getLogEntries() {
-        return logEntries;
+        return logEntries.toList();
     }
 }
