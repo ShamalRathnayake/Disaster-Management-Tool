@@ -6,6 +6,7 @@ import java.util.Scanner;
 import core.baseClasses.location.Location;
 import core.baseClasses.network.Network;
 import core.enums.Enum.LocationType;
+import core.enums.Enum.ResourceType;
 import ui.Menu;
 
 public class LocationMenu {
@@ -42,40 +43,16 @@ public class LocationMenu {
         }
     }
 
-    private static LocationType getLocationTypeByChoice(int choice) {
-        switch (choice) {
-            case 1:
-                return LocationType.CITY;
-            case 2:
-                return LocationType.HOSPITAL;
-            case 3:
-                return LocationType.FIRE_STATION;
-            case 4:
-                return LocationType.WATER_TANK;
-            case 5:
-                return LocationType.POWER_STATION;
-            case 6:
-                return LocationType.POLICE_STATION;
-            case 7:
-                return LocationType.SCHOOL;
-            default:
-                System.out.println("Invalid choice. Defaulting to CITY.");
-                return LocationType.CITY;
-        }
-    }
-
     private static void addLocation() {
         System.out.println("Select a location type:");
-        System.out.println("1. CITY");
-        System.out.println("2. HOSPITAL");
-        System.out.println("3. FIRE_STATION");
-        System.out.println("4. WATER_TANK");
-        System.out.println("5. POWER_STATION");
-        System.out.println("6. POLICE_STATION");
-        System.out.println("7. SCHOOL");
+
+        LocationType[] locationTypes = LocationType.values();
+        for (int i = 0; i < locationTypes.length; i++) {
+            System.out.println((i + 1) + ". " + locationTypes[i]);
+        }
 
         int choice = Menu.getIntInput("Enter the location type number: ");
-        LocationType locationType = getLocationTypeByChoice(choice);
+        LocationType locationType = locationTypes[choice - 1];
 
         String name = Menu.getStringInput("Enter the location name: ");
         double latitude = Menu.getDoubleInput("Enter the latitude: ");

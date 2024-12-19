@@ -126,6 +126,10 @@ public class Location {
         this.status = status;
     }
 
+    public boolean isOperational() {
+        return this.status == StatusType.ACTIVE;
+    }
+
     public CustomLinkedList<LogEntry> getLogs() {
         return logs;
     }
@@ -224,6 +228,11 @@ public class Location {
         resources.deleteNode(resource);
 
         System.out.println("Resource removed successfully: " + resource.getResourceId());
+    }
+
+    public void addDisaster(Disaster disaster) {
+        disasters.insertEnd(disaster);
+        status = StatusType.DAMAGED;
     }
 
 }
