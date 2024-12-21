@@ -6,6 +6,7 @@ import core.baseClasses.connection.Connection;
 import core.baseClasses.disaster.Disaster;
 import core.baseClasses.log.LogEntry;
 import core.baseClasses.resource.Resource;
+import core.enums.Enum;
 import core.enums.Enum.DisasterStatus;
 import core.enums.Enum.DisasterType;
 import core.enums.Enum.LocationType;
@@ -50,6 +51,7 @@ public class Location {
         this.connections = new CustomLinkedList<>();
         this.status = StatusType.ACTIVE;
         this.logs = new CustomLinkedList<>();
+
     }
 
     public String getId() {
@@ -134,6 +136,14 @@ public class Location {
 
     public CustomLinkedList<LogEntry> getLogs() {
         return logs;
+    }
+
+    public void addConnection(Connection connection) {
+        if (connections.getNode(connection) == null) {
+            connections.insertEnd(connection);
+            // logs.add("Connection added between " + name + " and " +
+            // connection.getDestination().getName());
+        }
     }
 
     public void setLogs(CustomLinkedList<LogEntry> logs) {
@@ -309,5 +319,6 @@ public class Location {
             System.out.println("Error: ResourceType " + resourceType + " not found in resourcesCount.");
         }
     }
+
 
 }

@@ -8,7 +8,7 @@ public class Enum {
     }
 
     public enum StatusType {
-        ACTIVE, DAMAGED, INOPERABLE
+        ACTIVE, DAMAGED, INOPERABLE,INACTIVE
     }
 
     public enum ResourceType {
@@ -26,6 +26,7 @@ public class Enum {
     }
 
     public enum LogLevel {
-        INFO, WARNING, ERROR
+        INFO, WARNING, WARN, DEBUG, ERROR
     }
+
 }

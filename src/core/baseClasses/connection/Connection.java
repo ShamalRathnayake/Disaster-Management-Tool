@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import core.baseClasses.location.Location;
 import core.enums.Enum.*;
+import core.enums.Enum.StatusType;
 
 public class Connection {
 

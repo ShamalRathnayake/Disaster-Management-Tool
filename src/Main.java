@@ -1,3 +1,5 @@
+import core.baseClasses.location.Location;
+import core.enums.Enum;
 import ui.Menu;
 
 public class Main {
