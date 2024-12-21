@@ -12,12 +12,17 @@ public class ConfigureTool {
 
     public static void configure() {
         while (true) {
-            System.out.println("\n--- Configure Tool ---");
-            System.out.println("1. Location");
-            System.out.println("2. Connection");
-            System.out.println("3. Resource");
-            System.out.println("4. Go Back");
-            System.out.print("Enter your choice: ");
+            System.out.println("\n\n===========================================");
+            System.out.println("              🛠️  Configure Tool            ");
+            System.out.println("===========================================");
+            System.out.println();
+            System.out.println("  [1] Manage Locations");
+            System.out.println("  [2] Configure Connections");
+            System.out.println("  [3] Manage Resources");
+            System.out.println("  [4] Go Back");
+            System.out.println();
+            System.out.println("===========================================");
+            System.out.print("  Please enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
 

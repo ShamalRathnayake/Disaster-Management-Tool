@@ -8,11 +8,17 @@ public class Reports {
 
     public static void viewReports() {
         while (true) {
-            System.out.println("\n--- Reports ---");
-            System.out.println("1. Network");
-            System.out.println("2. Logs");
-            System.out.println("3. Go Back");
-            System.out.print("Enter your choice: ");
+            System.out.println("\n===========================================");
+            System.out.println("               📊 Reports                  ");
+            System.out.println("===========================================\n");
+            System.out.println();
+            System.out.println("  [1] Network Report");
+            System.out.println("  [2] Logs Report");
+            System.out.println("  [3] Go Back");
+            System.out.println();
+            System.out.println("===========================================");
+            System.out.print("  Please enter your choice: ");
+
             int choice = scanner.nextInt();
             scanner.nextLine();
 
@@ -24,9 +30,10 @@ public class Reports {
                     viewLogsReport();
                     break;
                 case 3:
+                    System.out.println("🔙 Going back...");
                     return;
                 default:
-                    System.out.println("Invalid choice! Please enter a valid option.");
+                    System.out.println("❌ Invalid choice! Please enter a valid option.");
             }
         }
     }

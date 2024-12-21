@@ -6,7 +6,6 @@ import java.util.Scanner;
 import core.baseClasses.location.Location;
 import core.baseClasses.network.Network;
 import core.enums.Enum.LocationType;
-import core.enums.Enum.ResourceType;
 import ui.Menu;
 
 public class LocationMenu {
@@ -16,12 +15,17 @@ public class LocationMenu {
 
     public static void locationSubmenu() {
         while (true) {
-            System.out.println("\n--- Location ---");
-            System.out.println("1. Add Location");
-            System.out.println("2. Remove Location");
-            System.out.println("3. View Locations");
-            System.out.println("4. Go Back");
-            System.out.print("Enter your choice: ");
+            System.out.println("\n\n===========================================");
+            System.out.println("                📍  Location Menu              ");
+            System.out.println("===========================================");
+            System.out.println();
+            System.out.println("  [1] Add a New Location");
+            System.out.println("  [2] Remove an Existing Location");
+            System.out.println("  [3] View All Locations");
+            System.out.println("  [4] Go Back");
+            System.out.println();
+            System.out.println("===========================================");
+            System.out.print("  Please enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
 
@@ -36,61 +40,81 @@ public class LocationMenu {
                     viewLocations();
                     break;
                 case 4:
+                    System.out.println("\n🔙 Going back...");
                     return;
                 default:
-                    System.out.println("Invalid choice! Please enter a valid option.");
+                    System.out.println("\n❌ Invalid choice! Please enter a valid option.");
             }
         }
     }
 
     private static void addLocation() {
-        System.out.println("Select a location type:");
+        System.out.println("\n\n===========================================");
+        System.out.println("           🌍 Add a New Location           ");
+        System.out.println("===========================================");
+        System.out.println("\nSelect a location type:");
 
         LocationType[] locationTypes = LocationType.values();
         for (int i = 0; i < locationTypes.length; i++) {
-            System.out.println((i + 1) + ". " + locationTypes[i]);
+            System.out.println("  [" + (i + 1) + "] " + locationTypes[i]);
         }
 
-        int choice = Menu.getIntInput("Enter the location type number: ");
+        int choice = Menu.getIntInput("\n👉 Enter the location type number: ");
+        if (choice < 1 || choice > locationTypes.length) {
+            System.out.println("\n❌ Invalid choice. Please enter a valid index.");
+            return;
+        }
         LocationType locationType = locationTypes[choice - 1];
 
-        String name = Menu.getStringInput("Enter the location name: ");
-        double latitude = Menu.getDoubleInput("Enter the latitude: ");
-        double longitude = Menu.getDoubleInput("Enter the longitude: ");
+        System.out.println("\nEnter the details for the new location:");
+        String name = Menu.getStringInput("📍 Location Name: ");
+        double latitude = Menu.getDoubleInput("🌐 Latitude: ");
+        double longitude = Menu.getDoubleInput("🌐 Longitude: ");
 
         network.addLocation(locationType, name, latitude, longitude);
-        System.out.println("Location added: " + name + " (" + locationType + ")");
+        System.out.println("\n✅ Location successfully added!");
+        System.out.println("   Name: " + name);
+        System.out.println("   Type: " + locationType);
+        System.out.println("   Coordinates: (" + latitude + ", " + longitude + ")");
 
+        System.out.println("\n📍 Current Locations in the Network:\\n");
         network.printLocations();
     }
 
     private static void removeLocation() {
-
         Collection<Location> locations = network.getLocations();
 
         if (locations.isEmpty()) {
-            System.out.println("No locations available to remove.");
+            System.out.println("\n⚠️ No locations available to remove.");
             return;
         }
+
+        System.out.println("\n===========================================");
+        System.out.println("           📍 Available Locations          ");
+        System.out.println("===========================================\n");
 
         network.printLocations();
 
         int choice = Menu.getIntInput("Enter the index of the location to remove: ");
+
         if (choice < 1 || choice > locations.size()) {
-            System.out.println("Invalid choice.");
+            System.out.println("\n❌ Invalid choice. Please enter a valid index.");
             return;
         }
 
         Location selectedLocation = (Location) locations.toArray()[choice - 1];
 
         network.removeLocation(selectedLocation.getId());
-        System.out.println("Location " + selectedLocation.getName() + " removed.");
+        System.out.println("\n✅ Location \"" + selectedLocation.getName() + "\" removed successfully.");
     }
 
     private static void viewLocations() {
-        System.out.println("Viewing locations...");
-        System.out.println("");
+        System.out.println("\n===========================================");
+        System.out.println("              🌍 Viewing Locations          ");
+        System.out.println("===========================================\n");
 
         network.printLocations();
+
+        System.out.println("===========================================\n");
     }
 }

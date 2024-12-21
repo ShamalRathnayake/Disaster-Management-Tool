@@ -1,6 +1,7 @@
 package core.baseClasses.disaster;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -24,6 +25,8 @@ public class Disaster {
 
     private Map<ResourceType, Integer> requiredResources;
 
+    private Map<String, Integer> allocatedResources;
+
     private Date reportedAt;
 
     private Date resolvedAt;
@@ -35,6 +38,7 @@ public class Disaster {
         this.severity = severity;
         this.status = DisasterStatus.REPORTED;
         this.requiredResources = DisasterConfig.getRequiredResources(disasterType, severity);
+        this.allocatedResources = new HashMap<>();
         this.reportedAt = new Date();
         this.resolvedAt = null;
     }
@@ -126,5 +130,17 @@ public class Disaster {
                 disasterId, disasterType, location.getName(), severity,
                 status, requiredResources.toString(), reportedAt,
                 resolvedAt != null ? resolvedAt.toString() : "Not Resolved");
+    }
+
+    public void addResourceAllocation(String resourceId, int allocatedAmount) {
+        if (allocatedResources.containsKey(resourceId)) {
+            allocatedResources.put(resourceId, allocatedResources.get(resourceId) + allocatedAmount);
+        } else {
+            allocatedResources.put(resourceId, allocatedAmount);
+        }
+    }
+
+    public Map<String, Integer> getAllocatedResources() {
+        return this.allocatedResources;
     }
 }

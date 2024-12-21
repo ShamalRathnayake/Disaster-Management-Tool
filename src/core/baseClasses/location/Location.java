@@ -6,6 +6,8 @@ import core.baseClasses.connection.Connection;
 import core.baseClasses.disaster.Disaster;
 import core.baseClasses.log.LogEntry;
 import core.baseClasses.resource.Resource;
+import core.enums.Enum.DisasterStatus;
+import core.enums.Enum.DisasterType;
 import core.enums.Enum.LocationType;
 import core.enums.Enum.ResourceType;
 import core.enums.Enum.StatusType;
@@ -138,11 +140,36 @@ public class Location {
         this.logs = logs;
     }
 
-    public void addConnection(Connection connection) {
-        if (connections.getNode(connection) == null) {
+    public Connection getConnectionByStartLocation(Location startLocation) {
+        Connection selectedConnection = null;
+
+        for (Connection connection : connections.toList()) {
+            if (connection.getStartLocation().equals(startLocation)) {
+                selectedConnection = connection;
+            }
+        }
+
+        return selectedConnection;
+    }
+
+    public Connection getConnectionByEndLocation(Location endLocation) {
+        Connection selectedConnection = null;
+
+        for (Connection connection : connections.toList()) {
+            if (connection.getEndLocation().equals(endLocation)) {
+                selectedConnection = connection;
+            }
+        }
+
+        return selectedConnection;
+    }
+
+    public void addConnection(Connection connection, Boolean isStart) throws Exception {
+        if ((isStart && getConnectionByStartLocation(connection.getStartLocation()) == null)
+                || (!isStart && getConnectionByEndLocation(connection.getEndLocation()) == null)) {
             connections.insertEnd(connection);
-            // logs.add("Connection added between " + name + " and " +
-            // connection.getDestination().getName());
+        } else {
+            throw new Exception();
         }
     }
 
@@ -157,18 +184,19 @@ public class Location {
     }
 
     public void printConnections() {
-        System.out.println("\nConnections:");
+        System.out.println("\n===========================================");
+        System.out.println("            Connections Overview           ");
+        System.out.println("===========================================\n");
 
-        System.out.printf("%-5s %-20s %-20s %-20s %-10s %-10s %-25s\n",
-                "Index", "Connection ID", "Start Location", "End Location",
-                "Distance", "Status", "Last Updated");
+        System.out.printf("%-5s %-20s %-20s %-15s %-12s %-25s\n",
+                "Index", "Start Location", "End Location", "Distance (km)", "Status", "Last Updated");
+
+        System.out.println("-------------------------------------------------------------");
 
         int index = 1;
-
         for (Connection connection : this.connections.toList()) {
-            System.out.printf("%-5d %-20s %-20s %-20s %-10.2f %-10s %-25s\n",
+            System.out.printf("%-5d %-20s %-20s %-15.2f %-12s %-25s\n",
                     index++,
-                    connection.getConnectionId(),
                     connection.getStartLocation().getName(),
                     connection.getEndLocation().getName(),
                     connection.getDistance(),
@@ -176,29 +204,27 @@ public class Location {
                     connection.getLastUpdated().toString());
         }
 
-        System.out.println("");
+        System.out.println("\n");
     }
 
     // // Resource Management Methods
     public void addResource(Resource resource) {
         resources.insertEnd(resource);
-        int count = resourcesCount.get(resource.getResourceType());
+        int count = resourcesCount.getOrDefault(resource.getResourceType(), 0);
         resourcesCount.put(resource.getResourceType(), count + resource.getTotalQuantity());
     }
 
     public void printResources() {
-        System.out.println("\nResources:");
 
-        System.out.printf("%-5s %-20s %-20s %-15s %-15s %-15s %-20s\n",
-                "Index", "Resource ID", "Resource Type", "Total Quantity",
+        System.out.printf("%-5s %-20s %-15s %-15s %-15s %-20s\n",
+                "Index", "Resource Type", "Total Quantity",
                 "Allocated Qty", "Available Qty", "Stationed At");
 
         int index = 1;
 
         for (Resource resource : this.resources.toList()) {
-            System.out.printf("%-5d %-20s %-20s %-15d %-15d %-15d %-20s\n",
+            System.out.printf("%-5d %-20s %-15d %-15d %-15d %-20s\n",
                     index++,
-                    resource.getResourceId(),
                     resource.getResourceType().name(),
                     resource.getTotalQuantity(),
                     resource.getAllocatedQuantity(),
@@ -231,8 +257,57 @@ public class Location {
     }
 
     public void addDisaster(Disaster disaster) {
+
         disasters.insertEnd(disaster);
         status = StatusType.DAMAGED;
+    }
+
+    public List<Resource> getResourcesByType(ResourceType resourceType) {
+        List<Resource> filteredResources = new ArrayList<>();
+
+        for (Resource resource : resources.toList()) {
+            if (resource.getResourceType().equals(resourceType)) {
+                filteredResources.add(resource);
+            }
+        }
+
+        return filteredResources;
+    }
+
+    public Resource getResourceById(String resourceId) {
+        Resource filteredResource = null;
+
+        for (Resource resource : resources.toList()) {
+            if (resource.getResourceId().equals(resourceId)) {
+                filteredResource = resource;
+            }
+        }
+
+        return filteredResource;
+    }
+
+    public Disaster getActiveDisaster() {
+
+        Disaster activeDisaster = null;
+        for (Disaster disaster : disasters.toList()) {
+            if (disaster.getStatus().equals(DisasterStatus.IN_PROGRESS)) {
+                activeDisaster = disaster;
+            }
+        }
+
+        return activeDisaster;
+    }
+
+    public void updateResourceCount(ResourceType resourceType, int amountReleased) {
+        if (resourcesCount.containsKey(resourceType)) {
+            int currentCount = resourcesCount.get(resourceType);
+            int updatedCount = currentCount + amountReleased;
+            resourcesCount.put(resourceType, updatedCount);
+
+            System.out.println("Updated " + resourceType + " count in " + getName() + ": " + updatedCount);
+        } else {
+            System.out.println("Error: ResourceType " + resourceType + " not found in resourcesCount.");
+        }
     }
 
 }

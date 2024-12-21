@@ -62,6 +62,10 @@ public class Resource {
         this.allocatedQuantity = allocatedQuantity;
     }
 
+    public int getAvailableQuantity() {
+        return totalQuantity - allocatedQuantity;
+    }
+
     public Location getStationedAt() {
         return stationedAt;
     }

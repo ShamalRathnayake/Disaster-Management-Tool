@@ -3,6 +3,7 @@ package ui;
 import java.util.*;
 
 import core.baseClasses.network.Network;
+import demo.DemoData;
 import ui.configureTool.ConfigureTool;
 import ui.reportDisaster.ReportDisaster;
 import ui.reports.Reports;
@@ -11,7 +12,7 @@ public class Menu {
 
     private static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
+    public static void startTool() {
         Network.getInstance();
         runMenu();
     }
@@ -41,12 +42,18 @@ public class Menu {
     }
 
     public static void displayMenu() {
-        System.out.println("\n--- Disaster Management Tool ---");
-        System.out.println("1. Report Disaster");
-        System.out.println("2. Configure Tool");
-        System.out.println("3. Reports");
-        System.out.println("4. Exit");
-        System.out.print("Enter your choice: ");
+        System.out.println("\n\n===========================================");
+        System.out.println("        🌍 Disaster Management Tool 🌟      ");
+        System.out.println("===========================================");
+        System.out.println();
+        System.out.println("  🚨 1. Report Disaster");
+        System.out.println("  🛠️  2. Configure Tool");
+        System.out.println("  📊 3. View Reports");
+        System.out.println("  🖥️  4. Load Demo Data");
+        System.out.println("  ❌ 5. Exit");
+        System.out.println();
+        System.out.println("===========================================");
+        System.out.print("  Please enter your choice: ");
     }
 
     public static void runMenu() {
@@ -66,12 +73,38 @@ public class Menu {
                     Reports.viewReports();
                     break;
                 case 4:
+                    loadDemoData();
+                    break;
+                case 5:
                     System.out.println("Exiting Disaster Management Tool...");
                     return;
                 default:
                     System.out.println("Invalid choice! Please enter a valid option.");
             }
         }
+    }
+
+    public static void loadDemoData() {
+
+        System.out.println("\n=============================================");
+        System.out.println("  💥  Loading Demo Data for the System  💥  ");
+        System.out.println("=============================================\n");
+
+        System.out.println("🚀 Step 1: Creating Locations...");
+        DemoData.createLocations();
+        System.out.println("✅ Locations created successfully.\n");
+
+        System.out.println("🌐 Step 2: Creating Connections...");
+        DemoData.createConnections();
+        System.out.println("✅ Connections established successfully.\n");
+
+        System.out.println("💡 Step 3: Adding Resources to Locations...");
+        DemoData.addResources();
+        System.out.println("✅ Resources assigned successfully.\n");
+
+        System.out.println("\n=============================================");
+        System.out.println(" 🎉 Demo Data Loaded Successfully! 🎉 ");
+        System.out.println("=============================================\n");
     }
 
 }
