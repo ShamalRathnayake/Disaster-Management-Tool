@@ -1,15 +1,18 @@
 package core.baseClasses.network;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -521,6 +524,95 @@ public class Network {
     public static String formatToTwoDecimalPlaces(double value) {
         DecimalFormat df = new DecimalFormat("#.00");
         return df.format(value);
+    }
+
+    public void saveDisasterStatusToFile() {
+        String timestamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
+        String fileName = "Disasters_Overview_" + timestamp + ".txt";
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+
+            String header = "\n====================================================================\n" +
+                    "                          🌍 Disasters Overview 🌍                         \n" +
+                    "====================================================================\n\n";
+            System.out.print(header);
+            writer.write(header);
+
+            boolean disastersFound = false;
+
+            for (Location location : locations.values()) {
+                List<Disaster> disasters = location.getDisasters().toList();
+
+                if (!disasters.isEmpty()) {
+                    String locationHeader = "\n🏠 Location: " + location.getName() + "\n" +
+                            "--------------------------------------------------------\n";
+                    System.out.print(locationHeader);
+                    writer.write(locationHeader);
+
+                    for (Disaster disaster : disasters) {
+
+                        String disasterDetails = String.format("\n  🔶 Disaster ID   : %s\n", disaster.getDisasterId())
+                                +
+                                String.format("  🌪️ Type          : %s\n", disaster.getDisasterType()) +
+                                String.format("  ⚠️ Severity      : %d (1 = Least Severe, 10 = Most Severe)\n",
+                                        disaster.getSeverity())
+                                +
+                                String.format("  🟢 Status        : %s\n", disaster.getStatus()) +
+                                String.format("  📅 Reported At   : %s\n", disaster.getReportedAt()) +
+                                String.format("  ✅ Resolved At   : %s\n",
+                                        disaster.getResolvedAt() != null ? disaster.getResolvedAt() : "Not Resolved")
+                                +
+                                "\n  ------------------------------------------------------\n";
+                        System.out.print(disasterDetails);
+                        writer.write(disasterDetails);
+
+                        String requiredResourcesHeader = "\n  🔧 Required Resources:\n";
+                        System.out.print(requiredResourcesHeader);
+                        writer.write(requiredResourcesHeader);
+                        for (Map.Entry<ResourceType, Integer> entry : disaster.getRequiredResources().entrySet()) {
+                            String resourceLine = String.format("    🔹 %s: %d units\n",
+                                    entry.getKey().name().replace("_", " "), entry.getValue());
+                            System.out.print(resourceLine);
+                            writer.write(resourceLine);
+                        }
+
+                        String allocatedResourcesHeader = "\n  💼 Allocated Resources:\n";
+                        System.out.print(allocatedResourcesHeader);
+                        writer.write(allocatedResourcesHeader);
+                        if (disaster.getAllocatedResources().isEmpty()) {
+                            String noAllocations = "    🛑 No resources allocated yet.\n";
+                            System.out.print(noAllocations);
+                            writer.write(noAllocations);
+                        } else {
+                            for (Map.Entry<String, Integer> entry : disaster.getAllocatedResources().entrySet()) {
+                                String allocationLine = String.format("    🔸 Resource ID %s: %d units\n",
+                                        entry.getKey(), entry.getValue());
+                                System.out.print(allocationLine);
+                                writer.write(allocationLine);
+                            }
+                        }
+                        String endLine = "\n--------------------------------------------------------\n\n";
+                        System.out.print(endLine);
+                        writer.write(endLine);
+                    }
+
+                    disastersFound = true;
+                }
+            }
+
+            if (!disastersFound) {
+                String noDisastersMessage = "🚨 No disasters found in the network.\n";
+                System.out.print(noDisastersMessage);
+                writer.write(noDisastersMessage);
+            }
+
+            String footer = "====================================================================\n";
+            System.out.print(footer);
+            writer.write(footer);
+
+        } catch (IOException e) {
+            System.err.println("Error writing to file: " + e.getMessage());
+        }
     }
 
 }
