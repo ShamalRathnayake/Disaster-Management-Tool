@@ -100,11 +100,16 @@ public class CustomLinkedList<T> {
         }
 
         Node<T> current = this.head;
-        while (current.next != null && !current.data.equals(nodeValue)) {
+
+        if (current.data.equals(nodeValue)) {
+            return deleteFront();
+        }
+
+        while (current != null && !current.data.equals(nodeValue)) {
             current = current.next;
         }
 
-        if (current.next == null && !current.data.equals(nodeValue)) {
+        if (current == null) {
             return null;
         }
 
