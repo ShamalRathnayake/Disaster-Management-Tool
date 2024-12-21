@@ -2,9 +2,12 @@ package ui.reports;
 
 import java.util.Scanner;
 
+import core.baseClasses.network.Network;
+
 public class Reports {
 
     private static Scanner scanner = new Scanner(System.in);
+    private static Network network = Network.getInstance();
 
     public static void viewReports() {
         while (true) {
@@ -13,7 +16,7 @@ public class Reports {
             System.out.println("===========================================\n");
             System.out.println();
             System.out.println("  [1] Network Report");
-            System.out.println("  [2] Logs Report");
+            System.out.println("  [2] Location Report");
             System.out.println("  [3] Go Back");
             System.out.println();
             System.out.println("===========================================");
@@ -27,7 +30,7 @@ public class Reports {
                     viewNetworkReport();
                     break;
                 case 2:
-                    viewLogsReport();
+                    viewLocationReport();
                     break;
                 case 3:
                     System.out.println("🔙 Going back...");
@@ -39,12 +42,11 @@ public class Reports {
     }
 
     private static void viewNetworkReport() {
-        System.out.println("\n--- Network Report ---");
-        System.out.println("Displaying network report...");
+        network.saveNetworkStatusToFile();
+
     }
 
-    private static void viewLogsReport() {
-        System.out.println("\n--- Logs Report ---");
-        System.out.println("Displaying logs report...");
+    private static void viewLocationReport() {
+        network.saveLocationStatusToFile();
     }
 }

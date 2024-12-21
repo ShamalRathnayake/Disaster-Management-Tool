@@ -1,6 +1,11 @@
 package core.baseClasses.network;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -118,8 +123,45 @@ public class Network {
         System.out.println("\n===========================================\n");
     }
 
+    public void saveLocationStatusToFile() {
+        StringBuilder output = new StringBuilder();
+
+        output.append("\n═══════════════════════════════════════════════════════════════════════════════════════\n")
+                .append("                              🌍 Location List\n")
+                .append("═══════════════════════════════════════════════════════════════════════════════════════\n");
+
+        output.append(String.format("%-5s %-25s %-15s %-15s %-15s %-10s\n",
+                "No.", "Name", "Type", "Latitude", "Longitude", "Status"))
+                .append("───────────────────────────────────────────────────────────────────────────────────────\n");
+
+        int index = 1;
+        for (Location location : locations.values()) {
+            output.append(String.format("%-5d %-25s %-15s %-15.5f %-15.5f %-10s\n",
+                    index++,
+                    location.getName(),
+                    location.getType(),
+                    location.getLatitude(),
+                    location.getLongitude(),
+                    location.getStatus()));
+        }
+
+        output.append("═══════════════════════════════════════════════════════════════════════════════════════\n");
+
+        System.out.print(output.toString());
+
+        String timestamp = java.time.LocalDateTime.now().toString().replace(":", "-");
+        String fileName = "location-list" + "_" + timestamp + ".txt";
+
+        try (java.io.FileWriter writer = new java.io.FileWriter(fileName)) {
+            writer.write(output.toString());
+            System.out.println("📂 Location list saved to file: " + fileName);
+        } catch (java.io.IOException e) {
+            System.err.println("❌ Error saving to file: " + e.getMessage());
+        }
+    }
+
     public void printNetwork() {
-        System.out.println("\nNetwork Graph:");
+        // System.out.println("\nNetwork Graph:");
 
         for (Location location : locations.values()) {
 
@@ -146,6 +188,55 @@ public class Network {
             }
 
             System.out.println();
+        }
+    }
+
+    public void saveNetworkStatusToFile() {
+
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+        String fileName = "network_graph_" + timestamp + ".txt";
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
+            StringBuilder output = new StringBuilder();
+
+            output.append("\n╔══════════════════════════════════════════════╗\n");
+            output.append("║              🌐 NETWORK GRAPH                ║\n");
+            output.append("╚══════════════════════════════════════════════╝\n\n");
+
+            for (Location location : locations.values()) {
+                output.append(String.format("📌 %-30s\n", location.getName()));
+                output.append("════════════════════════════════════════════════\n");
+                output.append(String.format("  🆔 Name: %-10s  📂 Type: %-10s  🔄 Status: %-10s\n",
+                        location.getName(), location.getType(), location.getStatus()));
+
+                List<Connection> connections = location.getConnections().toList();
+
+                if (connections.isEmpty()) {
+                    output.append("  ❌ No connections available.\n");
+                } else {
+                    output.append("  📡 Connections:\n");
+                    for (Connection connection : connections) {
+                        output.append(String.format("     🔗 From: %-20s → To: %-20s\n",
+                                connection.getStartLocation().getName(),
+                                connection.getEndLocation().getName()));
+                        output.append(String.format("        📏 Distance: %-7.2f KM  🛠 Status: %s\n",
+                                connection.getDistance(), connection.getStatus()));
+                    }
+                }
+
+                output.append("════════════════════════════════════════════════\n\n");
+            }
+
+            output.append("╔══════════════════════════════════════════════╗\n");
+            output.append("║              🔚 END OF NETWORK               ║\n");
+            output.append("╚══════════════════════════════════════════════╝\n");
+
+            System.out.println(output);
+
+            writer.print(output);
+            System.out.println("Network graph saved to " + fileName);
+        } catch (IOException e) {
+            System.err.println("Error writing to file: " + e.getMessage());
         }
     }
 

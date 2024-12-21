@@ -175,12 +175,8 @@ public class Location {
 
     public void removeConnection(Connection connection) {
 
-        Node<Connection> deletedConnection = connections.deleteNode(connection);
+        connections.deleteNode(connection);
 
-        if (deletedConnection != null) {
-            // logs.add("Connection removed between " + name + " and " +
-            // connection.getDestination().getName());
-        }
     }
 
     public void printConnections() {
@@ -253,7 +249,7 @@ public class Location {
 
         resources.deleteNode(resource);
 
-        System.out.println("Resource removed successfully: " + resource.getResourceId());
+        System.out.println("Resource removed successfully: " + resource.getResourceType());
     }
 
     public void addDisaster(Disaster disaster) {
