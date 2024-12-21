@@ -140,36 +140,36 @@ public class Location {
         this.logs = logs;
     }
 
-    public Connection getConnectionByStartLocation(Location startLocation) {
-        Connection selectedConnection = null;
+    public List<Connection> getConnectionsByStartLocation(Location startLocation) {
+        List<Connection> selectedConnections = new ArrayList<>();
 
         for (Connection connection : connections.toList()) {
             if (connection.getStartLocation().equals(startLocation)) {
-                selectedConnection = connection;
+                selectedConnections.add(connection);
             }
         }
 
-        return selectedConnection;
+        return selectedConnections;
     }
 
-    public Connection getConnectionByEndLocation(Location endLocation) {
-        Connection selectedConnection = null;
+    public List<Connection> getConnectionsByEndLocation(Location endLocation) {
+        List<Connection> selectedConnections = new ArrayList<>();
 
         for (Connection connection : connections.toList()) {
             if (connection.getEndLocation().equals(endLocation)) {
-                selectedConnection = connection;
+                selectedConnections.add(connection);
             }
         }
 
-        return selectedConnection;
+        return selectedConnections;
     }
 
     public void addConnection(Connection connection, Boolean isStart) throws Exception {
-        if ((isStart && getConnectionByStartLocation(connection.getStartLocation()) == null)
-                || (!isStart && getConnectionByEndLocation(connection.getEndLocation()) == null)) {
+        if ((isStart && getConnectionsByStartLocation(connection.getStartLocation()).isEmpty())
+                || (!isStart && getConnectionsByEndLocation(connection.getEndLocation()).isEmpty())) {
             connections.insertEnd(connection);
         } else {
-            throw new Exception();
+            throw new Exception("Connection already exists for the specified location.");
         }
     }
 
