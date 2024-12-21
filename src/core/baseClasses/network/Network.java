@@ -206,8 +206,8 @@ public class Network {
             for (Location location : locations.values()) {
                 output.append(String.format("📌 %-30s\n", location.getName()));
                 output.append("════════════════════════════════════════════════\n");
-                output.append(String.format("  🆔 ID: %-10s  📂 Type: %-10s  🔄 Status: %-10s\n",
-                        location.getId(), location.getType(), location.getStatus()));
+                output.append(String.format("  🆔 Name: %-10s  📂 Type: %-10s  🔄 Status: %-10s\n",
+                        location.getName(), location.getType(), location.getStatus()));
 
                 List<Connection> connections = location.getConnections().toList();
 

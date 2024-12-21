@@ -77,7 +77,7 @@ public class LocationMenu {
         System.out.println("   Type: " + locationType);
         System.out.println("   Coordinates: (" + latitude + ", " + longitude + ")");
 
-        System.out.println("\n📍 Current Locations in the Network:\\n");
+        System.out.println("\n📍 Current Locations in the Network:\n");
         network.printLocations();
     }
 

@@ -124,7 +124,7 @@ public class ConnectionMenu {
         Map<Integer, Connection> connectionMap = new HashMap<>();
         for (Connection connection : uniqueConnections) {
             connectionMap.put(index, connection);
-            System.out.printf("%-5d %-25s %-20s %-10.2f %-10s %-25s\n",
+            System.out.printf("%-5d %-25s %-20s %-10.2f %-10s\n",
                     index,
                     connection.getStartLocation().getName(),
                     connection.getEndLocation().getName(),
@@ -132,6 +132,8 @@ public class ConnectionMenu {
                     connection.getStatus());
             index++;
         }
+
+        System.out.println("===========================================");
 
         int connectionIndex = Menu.getIntInput("📏 Enter the index of the connection to remove: ");
         if (!connectionMap.containsKey(connectionIndex)) {

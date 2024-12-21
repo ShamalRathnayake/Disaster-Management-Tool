@@ -253,7 +253,7 @@ public class Location {
 
         resources.deleteNode(resource);
 
-        System.out.println("Resource removed successfully: " + resource.getResourceId());
+        System.out.println("Resource removed successfully: " + resource.getResourceType());
     }
 
     public void addDisaster(Disaster disaster) {
